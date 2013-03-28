@@ -107,5 +107,6 @@ def add_to_builtins(module_name):
 
 add_to_builtins('coffin.template.defaulttags')
 add_to_builtins('coffin.template.defaultfilters')
-add_to_builtins('coffin.templatetags.static')
+add_to_builtins('coffin.contrib.staticfiles.templatetags.static')
+
 

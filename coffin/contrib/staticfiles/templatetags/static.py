@@ -1,16 +1,16 @@
 from coffin import template
 from django.contrib.staticfiles.storage import staticfiles_storage
-from coffin.templatetags.static import StaticExtension
+from coffin.templatetags.static import StaticExtension as CoffinStaticExtension
 
 
 register = template.Library()
 
 
-class StaticExtension(StaticExtension):
+class StaticExtension(CoffinStaticExtension):
     """Implements the {% static %} tag as provided by the ``staticfiles``
     contrib module.
 
-    Rreturns the URL to a file using staticfiles' storage backend.
+    Returns the URL to a file using staticfiles' storage backend.
 
     Usage::
 
@@ -26,8 +26,8 @@ class StaticExtension(StaticExtension):
     """
 
     @classmethod
-    def get_statc_url(cls, path):
-        return super(StaticExtension, cls).get_statc_url(
+    def get_static_url(cls, path):
+        return super(StaticExtension, cls).get_static_url(
             staticfiles_storage.url(path))
 
 
