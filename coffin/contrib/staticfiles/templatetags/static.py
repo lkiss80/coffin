@@ -1,9 +1,9 @@
-from coffin import template
+from coffin.template import Library
 from django.contrib.staticfiles.storage import staticfiles_storage
 from coffin.templatetags.static import StaticExtension as CoffinStaticExtension
 
 
-register = template.Library()
+register = Library()
 
 
 class StaticExtension(CoffinStaticExtension):
