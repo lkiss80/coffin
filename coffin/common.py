@@ -63,6 +63,10 @@ class CoffinEnvironment(Environment):
                 elif isinstance(loader, (tuple, list)):
                     loader_name = loader[0]
                     args = loader[1]
+                else:
+                    # Call and attach the loader
+                    loaders.append(loader())
+                    continue
 
                 if loader_name:
                     loader_obj = jinja_loader_from_django_loader(loader_name, args)
@@ -70,7 +74,7 @@ class CoffinEnvironment(Environment):
                         loaders.append(loader_obj)
                         continue
 
-                warnings.warn('Cannot translate loader: %s' % loader)
+                    warnings.warn('Cannot translate loader: %s' % loader)
         return loaders
 
     def _get_templatelibs(self):
