@@ -17,6 +17,8 @@ from os.path import splitext
 from coffin.common import env
 from django.conf import settings
 from django.template.loaders import app_directories, filesystem
+from django.template import TemplateDoesNotExist
+from jinja2.exceptions import TemplateNotFound
 
 
 JINJA2_DEFAULT_TEMPLATE_EXTENSION = getattr(settings,
@@ -35,7 +37,11 @@ class LoaderMixin(object):
         if not extension in JINJA2_DEFAULT_TEMPLATE_EXTENSION:
             return super(LoaderMixin, self).load_template(template_name,
                 template_dirs)
-        template = env.get_template(template_name)
+        try:
+            template = env.get_template(template_name)
+        except TemplateNotFound:
+            raise TemplateDoesNotExist
+
         return template, template.filename
 
 
