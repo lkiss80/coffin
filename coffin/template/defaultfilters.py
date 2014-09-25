@@ -39,34 +39,60 @@ def timeuntil(value, *args):
 
 @register.jinja2_filter(jinja2_only=True)
 def date(value, arg=None):
+    """Formats a date according to the given format."""
     if value is None or isinstance(value, Undefined):
         return u''
     from django.conf import settings
+    from django.utils import formats
     from django.utils.dateformat import format
     if arg is None:
         arg = settings.DATE_FORMAT
-    return format(value, arg)
+    try: 
+        return formats.date_format(value, arg) 
+    except AttributeError:
+        try: 
+            return format(value, arg) 
+        except AttributeError:
+            return ''
 
 @register.jinja2_filter(jinja2_only=True)
 def time(value, arg=None):
+    """Formats a time according to the given format."""
     if value is None or isinstance(value, Undefined):
         return u''
     from django.conf import settings
+    from django.utils import formats
     from django.utils.dateformat import time_format
     if arg is None:
         arg = settings.TIME_FORMAT
-    return time_format(value, arg)
+    try: 
+        return formats.time_format(value, arg) 
+    except AttributeError:
+        try: 
+            return time_format(value, arg) 
+        except AttributeError:
+            return ''
 
 @register.jinja2_filter(jinja2_only=True)
 def truncatewords(value, length):
     # Jinja2 has it's own ``truncate`` filter that supports word
     # boundaries and more stuff, but cannot deal with HTML.
-    from django.utils.text import truncate_words
+    try:
+        from django.utils.text import Truncator
+    except ImportError:
+        from django.utils.text import truncate_words # Django < 1.6
+    else:
+        truncate_words = lambda value, length: Truncator(value).words(length)
     return truncate_words(value, int(length))
 
 @register.jinja2_filter(jinja2_only=True)
 def truncatewords_html(value, length):
-    from django.utils.text import truncate_html_words
+    try:
+        from django.utils.text import Truncator
+    except ImportError:
+        from django.utils.text import truncate_html_words # Django < 1.6
+    else:
+        truncate_html_words = lambda value, length: Truncator(value).words(length, html=True)
     return truncate_html_words(value, int(length))
 
 @register.jinja2_filter(jinja2_only=True)
